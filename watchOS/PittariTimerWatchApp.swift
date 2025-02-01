@@ -6,12 +6,29 @@
 //
 
 import SwiftUI
+import WatchConnectivity
+import PittariTimerKit
 
 @main
-struct PittariTimer_Watch_App: App {
-    var body: some Scene {
-        WindowGroup {
-          PittariTimerView()
-        }
+struct PittariTimerWatchApp: App {
+  
+  @StateObject private var manager = PittariTimerManager()
+
+  init() {
+    setupWatchConnectivity()
+  }
+  
+  private func setupWatchConnectivity() {
+    if WCSession.isSupported() {
+      let session = WCSession.default
+      session.activate()
     }
+  }
+  
+  var body: some Scene {
+    WindowGroup {
+      PittariTimerView()
+        .environmentObject(manager)
+    }
+  }
 }

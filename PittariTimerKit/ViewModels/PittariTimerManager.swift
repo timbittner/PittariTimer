@@ -6,8 +6,9 @@
 //
 import Foundation
 import Combine
+import WatchConnectivity
 
-public class PittariTimerManager: ObservableObject {
+public class PittariTimerManager: NSObject, ObservableObject {
   @Published public var currentPeriod: SchoolPeriod?
   @Published public var nextPeriod: SchoolPeriod?
   @Published public var timeToNextBreak: TimeInterval = 0
@@ -21,7 +22,7 @@ public class PittariTimerManager: ObservableObject {
   private let scheduleKey = "savedSchedule"
   
   
-  public init() {
+  public override init() {
     if let data = UserDefaults.standard.data(forKey: scheduleKey),
        let savedSchedule = try? JSONDecoder().decode([SchoolPeriod].self, from: data) {
       self.schedule = savedSchedule
@@ -29,6 +30,11 @@ public class PittariTimerManager: ObservableObject {
       self.schedule = defaultSchedule
     }
     
+    super.init()
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(handleScheduleUpdate), name: .init("ScheduleUpdated"), object: nil)
+    
+    setupWatchConnectivity()
     startTimer()
   }
   
@@ -58,6 +64,9 @@ public class PittariTimerManager: ObservableObject {
   private func saveSchedule() {
     if let encoded = try? JSONEncoder().encode(schedule) {
       UserDefaults.standard.set(encoded, forKey: scheduleKey)
+#if os(iOS)
+      sendScheduleToWatch()
+#endif
     }
   }
   
@@ -89,6 +98,16 @@ public class PittariTimerManager: ObservableObject {
     schedule = defaultSchedule
   }
   
+  // In PittariTimerManager.swift, add method
+  @objc private func handleScheduleUpdate(_ notification: Notification) {
+    if let messageData = notification.object as? Data,
+       let decodedSchedule = try? JSONDecoder().decode([SchoolPeriod].self, from: messageData) {
+      DispatchQueue.main.async { [weak self] in
+        self?.schedule = decodedSchedule
+      }
+    }
+  }
+  
   // Mark: - DEBUG
   public func loadDebugSchedule() {
     let now = Date()
@@ -103,5 +122,67 @@ public class PittariTimerManager: ObservableObject {
       )
     ]
   }
+}
+
+// MARK: - Extensions
+
+extension PittariTimerManager: WCSessionDelegate {
+  public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+  
+  // iOS only delegate methods
+#if os(iOS)
+  public func sessionDidBecomeInactive(_ session: WCSession) {}
+  public func sessionDidDeactivate(_ session: WCSession) {
+    session.activate()
+  }
+#endif
+  
+  private func setupWatchConnectivity() {
+    if WCSession.isSupported() {
+      let session = WCSession.default
+      session.delegate = self
+      session.activate()
+    }
+  }
+  
+#if os(watchOS)
+  // Watch only receives updates. Realtime update:
+  public func session(_ session: WCSession, didReceiveMessageData messageData: Data) {
+    if let decodedSchedule = try? JSONDecoder().decode([SchoolPeriod].self, from: messageData) {
+      DispatchQueue.main.async { [weak self] in
+        self?.schedule = decodedSchedule
+      }
+    }
+  }
+  
+  // Delayed update:
+  public func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+    if let encoded = applicationContext["schedule"] as? Data,
+       let decodedSchedule = try? JSONDecoder().decode([SchoolPeriod].self, from: encoded) {
+      DispatchQueue.main.async { [weak self] in
+        self?.schedule = decodedSchedule
+      }
+    }
+  }
+  
+#else
+  // iOS sends updates
+  private func sendScheduleToWatch() {
+    guard WCSession.default.activationState == .activated else { return }
+    
+    if let encoded = try? JSONEncoder().encode(schedule) {
+      // Send immediate message if watch is reachable
+      if WCSession.default.isReachable {
+        WCSession.default.sendMessageData(encoded, replyHandler: nil) { error in
+          print("Error sending schedule to watch:", error.localizedDescription)
+        }
+      }
+      
+      // Also transfer for background delivery
+      let userInfo = ["schedule": encoded]
+      try? WCSession.default.updateApplicationContext(userInfo)
+    }
+  }
+#endif
 }
 
