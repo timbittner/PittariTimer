@@ -13,17 +13,53 @@ struct PittariTimerAppView: View {
   @State private var showingSettings: Bool = false
   
   var body: some View {
-    VStack {
-      Text("Current Session")
-        .font(.title)
-      Text(
-       manager.currentPeriod?.subject ??
-       (manager.nextPeriod != nil ? "Pause" : "Feierabend")
-      )
-      .font(.headline)
-      Text(formatTimeInterval(manager.timeToNextBreak))
-        .foregroundColor(.secondary)
+    VStack(spacing: 12) {
+      VStack {
+        Text("aktuelle Zeit und Unterrichtsstunde")
+          .font(.subheadline)
+          .foregroundColor(.secondary)
+        
+        HStack(alignment: .lastTextBaseline) {
+          Text(Date.now, format: .dateTime.hour().minute().second())
+            .font(.system(size: 42, weight: .regular, design: .rounded))
+            .monospacedDigit()
+            .minimumScaleFactor(0.5)
+            .lineLimit(1)
+          
+          Spacer()
+          
+          Text(manager.currentPeriod?.subject ??
+            (manager.nextPeriod != nil ? "Pause" : "Feierabend"))
+            .font(.system(size: 42, weight: .regular, design: .rounded))
+            .foregroundColor(.blue)
+            .minimumScaleFactor(0.5)
+            .lineLimit(1)
+        }
+
+      }
+      .frame(maxWidth: .infinity)
+      .padding(.vertical, 8)
+      .padding(.horizontal, 12)
+      .background(Color.white)
+      .clipShape(RoundedRectangle(cornerRadius: 6))
+      
+      VStack {
+        Text("Zeit bis zum Ende der Stunde/Pause")
+          .font(.subheadline)
+          .foregroundColor(.secondary)
+        
+        Text(formatTimeInterval(manager.timeToNextBreak))
+          .font(.system(size: 48, weight: .regular))
+          .foregroundColor(.red)
+      }
+      .frame(maxWidth: .infinity)
+      .padding(.vertical, 8)
+      .padding(.horizontal, 12)
+      .background(Color.white)
+      .clipShape(RoundedRectangle(cornerRadius: 6))
     }
+    .padding(8)
+    
     .toolbar {
       ToolbarItem(placement: .topBarTrailing) {
         Button(action: {showingSettings = true}) {
@@ -47,3 +83,8 @@ struct PittariTimerAppView: View {
     return String(format: "%02dm %02ds", minutes, seconds)
   }
 }
+
+#Preview {
+  PittariTimerAppView()
+}
+
