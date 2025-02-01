@@ -16,8 +16,11 @@ struct PittariTimerAppView: View {
     VStack {
       Text("Current Session")
         .font(.title)
-      Text(manager.currentPeriod?.subject ?? "Keine Stunde")
-        .font(.headline)
+      Text(
+       manager.currentPeriod?.subject ??
+       (manager.nextPeriod != nil ? "Pause" : "Feierabend")
+      )
+      .font(.headline)
       Text(formatTimeInterval(manager.timeToNextBreak))
         .foregroundColor(.secondary)
     }
@@ -28,10 +31,10 @@ struct PittariTimerAppView: View {
         }
       }
       ToolbarItem(placement: .navigationBarLeading) {
-         Button(action: { manager.loadDebugSchedule() }) {
-           Image(systemName: "ladybug")
-         }
-       }
+        Button(action: { manager.loadDebugSchedule() }) {
+          Image(systemName: "ladybug")
+        }
+      }
     }
     .sheet(isPresented: $showingSettings) {
       SettingsView(manager: manager)
@@ -41,6 +44,6 @@ struct PittariTimerAppView: View {
   private func formatTimeInterval(_ interval: TimeInterval) -> String {
     let minutes = Int(interval) / 60
     let seconds = Int(interval) % 60
-    return "\(minutes)m \(seconds)s"
+    return String(format: "%02dm %02ds", minutes, seconds)
   }
 }

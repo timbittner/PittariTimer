@@ -16,19 +16,29 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView {
+          VStack {
             List {
-                ForEach(manager.schedule) { period in
-                    NavigationLink(destination: EditPeriodView(period: period, manager: manager)) {
-                        PeriodRow(period: period)
-                    }
+              ForEach(manager.schedule) { period in
+                NavigationLink(destination: EditPeriodView(period: period, manager: manager)) {
+                  PeriodRow(period: period)
                 }
-                .onDelete { indexSet in
-                    indexSet.forEach { manager.removePeriod(at: $0) }
-                }
-                .onMove { source, destination in
-                    manager.movePeriod(from: source, to: destination)
-                }
+              }
+              .onDelete { indexSet in
+                indexSet.forEach { manager.removePeriod(at: $0) }
+              }
+              .onMove { source, destination in
+                manager.movePeriod(from: source, to: destination)
+              }
             }
+            Button(action: { manager.loadDefaultSchedule() }) {
+                     Text("Reset to Default Schedule")
+                       .foregroundColor(.red)
+                       .padding()
+                       .frame(maxWidth: .infinity)
+                   }
+                   .buttonStyle(.bordered)
+                   .padding()
+          }
             .navigationTitle("Schedule")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
