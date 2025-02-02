@@ -16,34 +16,28 @@ struct RectangularComplicationView: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 2) {
       HStack(alignment: .lastTextBaseline, spacing: 4) {
-        Text("aktuell:")
+        Text(NSLocalizedString("widget_r_subheadline_subject", bundle: .pittariTimerKit, comment: ""))
           .font(.system(size: 12))
           .foregroundStyle(.secondary)
         Spacer(minLength: 4)
         Text(entry.period?.subject ??
-             (entry.timeToNextBreak > 0 ? "Pause" : "Feierabend"))
+             (entry.timeToNextBreak > 0 ? "pause" : "no_more_subejct"))
           .font(.system(size: 20, weight: .medium))
           .minimumScaleFactor(0.5)
           .lineLimit(1)
       }
       
       HStack(alignment: .lastTextBaseline, spacing: 4) {
-        Text("verbleibend:")
+        Text(NSLocalizedString("widget_r_subheadline_time_remaining", bundle: .pittariTimerKit, comment: ""))
           .font(.system(size: 12))
           .foregroundStyle(.secondary)
         Spacer(minLength: 4)
-        Text(formatTimeInterval(entry.timeToNextBreak))
+        Text(TimeFormatting.formatMinutesOnly(entry.timeToNextBreak))
           .font(.system(size: 20, weight: .medium))
           .monospacedDigit()
           .minimumScaleFactor(0.5)
           .lineLimit(1)
       }
     }
-  }
-
-  
-  private func formatTimeInterval(_ interval: TimeInterval) -> String {
-    let minutes = Int(interval) / 60
-    return String(format: "%d min", minutes)
   }
 }

@@ -21,12 +21,12 @@ struct PittariTimerView: View {
         .lineLimit(1)
       
       VStack {
-        Text("aktuell:")
+        Text(NSLocalizedString("watch_subheadline_subject", bundle: .pittariTimerKit, comment: ""))
           .font(.subheadline)
           .foregroundColor(.secondary)
         
         Text(manager.currentPeriod?.subject ??
-             (manager.nextPeriod != nil ? "Pause" : "Feierabend"))
+             (manager.nextPeriod != nil ? NSLocalizedString("pause", bundle: .pittariTimerKit, comment: "") : NSLocalizedString("no_more_subject", bundle: .pittariTimerKit, comment: "")))
         .font(.system(size: 42, weight: .regular, design: .rounded))
         .foregroundColor(.blue)
         .minimumScaleFactor(0.5)
@@ -35,11 +35,11 @@ struct PittariTimerView: View {
       
       
       VStack {
-        Text("verbleibend:")
+        Text(NSLocalizedString("watch_subheadline_time_remaining", bundle: .pittariTimerKit, comment: ""))
           .font(.subheadline)
           .foregroundColor(.secondary)
         
-        Text(formatTimeInterval(manager.timeToNextBreak))
+        Text(TimeFormatting.formatWithSeconds(manager.timeToNextBreak))
           .font(.system(size: 48, weight: .regular))
           .foregroundColor(.red)
           .minimumScaleFactor(0.5)
@@ -47,11 +47,5 @@ struct PittariTimerView: View {
       }
     }
     .padding()
-  }
-  
-  private func formatTimeInterval(_ interval: TimeInterval) -> String {
-    let minutes = Int(interval) / 60
-    let seconds = Int(interval) % 60
-    return String(format: "%02dm %02ds", minutes, seconds)
   }
 }

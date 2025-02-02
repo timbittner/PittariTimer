@@ -31,7 +31,7 @@ struct SettingsView: View {
               }
             }
             Button(action: { manager.loadDefaultSchedule() }) {
-                     Text("Reset to Default Schedule")
+              Text(NSLocalizedString("settings.button.reset_default", bundle: .pittariTimerKit, comment: ""))
                        .foregroundColor(Color(uiColor: .systemRed))
                        .padding()
                        .frame(maxWidth: .infinity)
@@ -39,7 +39,7 @@ struct SettingsView: View {
                    .buttonStyle(.bordered)
                    .padding()
           }
-            .navigationTitle("Schedule")
+          .navigationTitle(NSLocalizedString("settings.nav_title", bundle: .pittariTimerKit, comment: ""))
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     EditButton()
@@ -50,7 +50,7 @@ struct SettingsView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                  Button(NSLocalizedString("button.done", bundle: .pittariTimerKit, comment: "")) {
                         dismiss()
                     }
                 }

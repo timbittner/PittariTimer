@@ -27,13 +27,13 @@ struct EditPeriodView: View {
     
   var body: some View {
     Form {
-      TextField("Subject", text: $subject)
-      DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
-      DatePicker("End Time", selection: $endTime, displayedComponents: .hourAndMinute)
+      TextField(NSLocalizedString("subject", bundle: .pittariTimerKit, comment: ""), text: $subject)
+      DatePicker(NSLocalizedString("start_time", bundle: .pittariTimerKit, comment: ""), selection: $startTime, displayedComponents: .hourAndMinute)
+      DatePicker(NSLocalizedString("end_time", bundle: .pittariTimerKit, comment: ""), selection: $endTime, displayedComponents: .hourAndMinute)
     }
-    .navigationTitle("Edit Period")
+    .navigationTitle(NSLocalizedString("editperiod.nav_title", bundle: .pittariTimerKit, comment: ""))
     .toolbar {
-      Button("Save") {
+      Button(NSLocalizedString("button.save", bundle: .pittariTimerKit, comment: "")) {
         if let index = manager.schedule.firstIndex(where: { $0.id == period.id }) {
           let updatedPeriod = SchoolPeriod(
             number: period.number,

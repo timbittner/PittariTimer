@@ -392,11 +392,12 @@
 				};
 			};
 			buildConfigurationList = 22B439822D4E232900FADC67 /* Build configuration list for PBXProject "PittariTimer" */;
-			developmentRegion = en;
+			developmentRegion = de;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
+				de,
+				ja,
 			);
 			mainGroup = 22B4397E2D4E232900FADC67;
 			minimizedProjectReferenceProxies = 1;

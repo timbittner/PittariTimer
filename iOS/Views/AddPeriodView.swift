@@ -18,19 +18,19 @@ struct AddPeriodView: View {
     var body: some View {
         NavigationView {
             Form {
-                TextField("Subject", text: $subject)
-                DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
-                DatePicker("End Time", selection: $endTime, displayedComponents: .hourAndMinute)
+              TextField(NSLocalizedString("subject", bundle: .pittariTimerKit, comment: ""), text: $subject)
+              DatePicker(NSLocalizedString("start_time", bundle: .pittariTimerKit,  comment: ""), selection: $startTime, displayedComponents: .hourAndMinute)
+              DatePicker(NSLocalizedString("end_time", bundle: .pittariTimerKit, comment: ""), selection: $endTime, displayedComponents: .hourAndMinute)
             }
-            .navigationTitle("Add Period")
+            .navigationTitle(NSLocalizedString("addperiod.nav_title", bundle: .pittariTimerKit, comment: ""))
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
+                  Button(NSLocalizedString("button.cancel", bundle: .pittariTimerKit, comment: "")) {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Add") {
+                  Button(NSLocalizedString("button.add", bundle: .pittariTimerKit, comment: "")) {
                         let newPeriod = SchoolPeriod(
                             number: manager.schedule.count + 1,
                             startTime: startTime,

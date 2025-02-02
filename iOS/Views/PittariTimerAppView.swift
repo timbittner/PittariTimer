@@ -15,7 +15,7 @@ struct PittariTimerAppView: View {
   var body: some View {
     VStack(spacing: 12) {
       VStack {
-        Text("aktuelle Zeit und Unterrichtsstunde")
+        Text(NSLocalizedString("ios_subheadline_time_and_subject", bundle: .pittariTimerKit, comment: ""))
           .font(.subheadline)
           .foregroundColor(.secondary)
         
@@ -29,7 +29,8 @@ struct PittariTimerAppView: View {
           Spacer()
           
           Text(manager.currentPeriod?.subject ??
-            (manager.nextPeriod != nil ? "Pause" : "Feierabend"))
+               (manager.nextPeriod != nil ? NSLocalizedString("pause", bundle: .pittariTimerKit, comment: "") :
+                  NSLocalizedString("no_more_subject", bundle: .pittariTimerKit, comment: "")))
             .font(.system(size: 42, weight: .regular, design: .rounded))
             .foregroundColor(Color.accentColor)
             .minimumScaleFactor(0.5)
@@ -44,11 +45,11 @@ struct PittariTimerAppView: View {
       .clipShape(RoundedRectangle(cornerRadius: 6))
       
       VStack {
-        Text("Zeit bis zum Ende der Stunde/Pause")
+        Text(NSLocalizedString("ios_subheadline_time_remaining", bundle: .pittariTimerKit, comment: ""))
           .font(.subheadline)
           .foregroundColor(.secondary)
         
-        Text(formatTimeInterval(manager.timeToNextBreak))
+        Text(TimeFormatting.formatWithSeconds(manager.timeToNextBreak))
           .font(.system(size: 48, weight: .regular))
           .foregroundColor(Color(uiColor: .systemRed))
       }
@@ -75,12 +76,6 @@ struct PittariTimerAppView: View {
     .sheet(isPresented: $showingSettings) {
       SettingsView(manager: manager)
     }
-  }
-  
-  private func formatTimeInterval(_ interval: TimeInterval) -> String {
-    let minutes = Int(interval) / 60
-    let seconds = Int(interval) % 60
-    return String(format: "%02dm %02ds", minutes, seconds)
   }
 }
 

@@ -1,0 +1,63 @@
+/*
+  Localizable.strings
+  PittariTimer
+
+  Created by Tim Bittner on 02.02.25.
+*/
+
+"button.cancel" = "Abbrechen";
+"button.add" = "Hinzufügen";
+"button.save" = "Speichern";
+"button.done" = "Fertig";
+
+/* Common */
+"pause" = "Pause";
+"no_more_subject" = "Feierabend";
+
+/* iOS */
+"subject" = "Fach";
+"start_time" = "Start Zeit";
+"end_time" = "End Zeit";
+
+"addperiod.nav_title" = "Fach hinzufügen";
+"editperiod.nav_title" = "Fach bearbeiten";
+
+"ios_subheadline_time_and_subject" = "aktuelle Zeit und Unterrichtsstunde";
+"ios_subheadline_time_remaining" = "Zeit bis zum Ende der Stunde/Pause";
+
+"settings.button.reset_default" = "Plan zurücksetzen";
+"settings.nav_title" = "Zeitplan";
+
+/* WatchOS */
+"watch_subheadline_subject" = "aktuell:";
+"watch_subheadline_time_remaining" = "verbleibend:";
+
+/* WatchOS (Widget/Complication) */
+"widget_recommend_time_and_subject" = "Zeit und Fach";
+"widget_recommend_gauge" = "Fortschrittsbalken";
+
+"widget_r_subheadline_subject" = "aktuell:";
+"widget_r_subheadline_time_remaining" = "verbleibend:";
+
+"widget_sample_subject" = "Einfache Klasse";
+"widget_minutes_shorthand" = "Min.";
+
+"widget_kind" = "PittariTimerWidget";
+"widget_config_display_name" = "Pittari Timer";
+"widget_config_description" = "Zeigt die aktuelle Stunde und die Zeit zur nächsten Pause an.";
+
+/* Kit */
+"default_schedule_period_1" = "1. Stunde";
+"default_schedule_period_2" = "2. Stunde";
+"default_schedule_period_3" = "3. Stunde";
+"default_schedule_period_4" = "4. Stunde";
+"default_schedule_period_5" = "5. Stunde";
+"default_schedule_period_6" = "6. Stunde";
+"default_schedule_period_7" = "7. Stunde";
+"default_schedule_period_8" = "8. Stunde";
+"default_schedule_period_9" = "9. Stunde";
+"default_schedule_period_10" = "10. Stunde";
+
+"time.format.with_seconds" = "%02dm %02ds";
+"time.format.minutes_only" = "%d Min.";
+"time.format.minutes_short" = "%d";

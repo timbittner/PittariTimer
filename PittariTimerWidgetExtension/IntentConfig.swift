@@ -14,8 +14,8 @@ enum CornerStyle: String, CaseIterable, AppEnum {
   
   static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Corner Style")
   static var caseDisplayRepresentations: [CornerStyle: DisplayRepresentation] = [
-    .stacked: "Time and Subject",
-    .gauge: "Progress Gauge"
+    .stacked: "widget_recommend_time_and_subject",
+    .gauge: "widget_recommend_gauge"
   ]
 }
 

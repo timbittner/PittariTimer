@@ -55,7 +55,7 @@ struct Provider: AppIntentTimelineProvider {
       number: 1,
       startTime: Date(),
       endTime: Date().addingTimeInterval(3600),
-      subject: "Sample Class"
+      subject: NSLocalizedString("widget_sample_subject", bundle: .pittariTimerKit, comment: "")
     )
     return PittariTimerEntry(
       date: Date(),
@@ -104,7 +104,7 @@ struct Provider: AppIntentTimelineProvider {
     return [
       AppIntentRecommendation(
         intent: ConfigurationAppIntent(),
-        description: "Time and Subject"
+        description: NSLocalizedString("widget_recommend_time_and_subject", bundle: .pittariTimerKit, comment: "")
       ),
       AppIntentRecommendation(
         intent: {
@@ -112,7 +112,7 @@ struct Provider: AppIntentTimelineProvider {
           intent.cornerStyle = .gauge
           return intent
         }(),
-        description: "Progress Gauge"
+        description: NSLocalizedString("widget_recommend_gauge", bundle: .pittariTimerKit, comment: "")
       )
     ]
   }
@@ -143,11 +143,11 @@ struct PittariTimerWidgetView: View {
       // TODO: i would really like to have the outer label arc but this already took too long
       switch configuration.cornerStyle {
       case .stacked: // Time remaining on outer arc, subject on inner arc
-        Text(formatTimeInterval(entry.timeToNextBreak) + "'")
+        Text(TimeFormatting.formatMinutesOnly(entry.timeToNextBreak, short: true))
           .font(.system(size: 22, weight: .medium, design: .rounded))
           .monospacedDigit()
           .widgetLabel {
-            Text(entry.period?.subject ?? "Pause")
+            Text(entry.period?.subject ?? NSLocalizedString("pause", bundle: .pittariTimerKit, comment: ""))
           }
         
       case .gauge: // 3-letter subject code on outer arc, time with progress gauge on inner
@@ -164,11 +164,11 @@ struct PittariTimerWidgetView: View {
           .widgetLabel {
             Gauge(value: progress,
                   in: 0...1) {
-              Text("min") // descriptor, minutes remaining
+              Text(NSLocalizedString("widget_minutes_shorthand", bundle: .pittariTimerKit, comment: "")) // descriptor, minutes remaining
             } currentValueLabel: {
               Text("\(progress * 100, format: .percent)") // descriptor, the amount of progress made
             } minimumValueLabel: {
-              Text(formatTimeInterval(entry.timeToNextBreak) + "min") // rendered left to the progress bar
+              Text(TimeFormatting.formatMinutesOnly(entry.timeToNextBreak)) // rendered left to the progress bar
             } maximumValueLabel: {
               Text("") // rendered right to the progress bar
             }
@@ -180,23 +180,18 @@ struct PittariTimerWidgetView: View {
       Text("Not supported")
     }
   }
-  
-  private func formatTimeInterval(_ interval: TimeInterval) -> any StringProtocol {
-    let minutes = Int(interval) / 60
-    return String(format: "%02d", minutes)
-  }
 }
 
 @main
 struct PittariTimerWidget: Widget {
-  let kind: String = "PittariTimerWidget"
+  let kind: String = "widget_kind"
   
   var body: some WidgetConfiguration {
     AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
       PittariTimerWidgetView(entry: entry, configuration: entry.configuration)
     }
-    .configurationDisplayName("PittariTimer")
-    .description("Shows current period and time to next break")
+    .configurationDisplayName(NSLocalizedString("widget_config_display_name", bundle: .pittariTimerKit, comment: ""))
+    .description(NSLocalizedString("widget_config_description", bundle: .pittariTimerKit, comment: ""))
     .supportedFamilies([.accessoryRectangular, .accessoryCorner])
   }
 }

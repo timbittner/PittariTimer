@@ -1,0 +1,63 @@
+/*
+  Localizable.strings
+  PittariTimer
+
+  Created by Tim Bittner on 02.02.25.
+*/
+
+"button.cancel" = "Cancel";
+"button.add" = "Add";
+"button.save" = "Save";
+"button.done" = "Done";
+
+/* Common */
+"pause" = "Pause";
+"no_more_subject" = "Done!";
+
+/* iOS */
+"subject" = "Subject";
+"start_time" = "Start Time";
+"end_time" = "End Time";
+
+"addperiod.nav_title" = "Add Period";
+"editperiod.nav_title" = "Edit Period";
+
+"ios_subheadline_time_and_subject" = "current Time and Subject";
+"ios_subheadline_time_remaining" = "time till next subject/break";
+
+"settings.button.reset_default" = "Reset to Default Schedule";
+"settings.nav_title" = "Schedule";
+
+/* WatchOS */
+"watch_subheadline_subject" = "currently:";
+"watch_subheadline_time_remaining" = "remaining:";
+
+/* WatchOS (Widget/Complication) */
+"widget_recommend_time_and_subject" = "Time and Subject";
+"widget_recommend_gauge" = "Progress Gauge";
+
+"widget_r_subheadline_subject" = "currently:";
+"widget_r_subheadline_time_remaining" = "remaining:";
+
+"widget_sample_subject" = "Sample Class";
+"widget_minutes_shorthand" = "min";
+
+"widget_kind" = "PittariTimerWidget";
+"widget_config_display_name" = "Pittari Timer";
+"widget_config_description" = "Shows current period and time to next break";
+
+/* Kit */
+"default_schedule_period_1" = "1st period";
+"default_schedule_period_2" = "2nd period";
+"default_schedule_period_3" = "3rd period";
+"default_schedule_period_4" = "4th period";
+"default_schedule_period_5" = "5th period";
+"default_schedule_period_6" = "6th period";
+"default_schedule_period_7" = "7th period";
+"default_schedule_period_8" = "8th period";
+"default_schedule_period_9" = "9th period";
+"default_schedule_period_10" = "10th period";
+
+"time.format.with_seconds" = "%02dm %02ds";
+"time.format.minutes_only" = "%d min";
+"time.format.minutes_short" = "%d'";

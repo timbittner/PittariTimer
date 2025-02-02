@@ -1,0 +1,63 @@
+/*
+  Localizable.strings
+  PittariTimer
+
+  Created by Tim Bittner on 02.02.25.
+*/
+
+"button.cancel" = "キャンセル";
+"button.add" = "追加";
+"button.save" = "保存";
+"button.done" = "完了";
+
+/* Common */
+"pause" = "休憩";
+"no_more_subject" = "お疲れ様!";
+
+/* iOS */
+"subject" = "科目";
+"start_time" = "開始時間";
+"end_time" = "終了時間";
+
+"addperiod.nav_title" = "時限追加";
+"editperiod.nav_title" = "時限編集";
+
+"ios_subheadline_time_and_subject" = "現在の時間と科目";
+"ios_subheadline_time_remaining" = "次の科目/休憩まで";
+
+"settings.button.reset_default" = "デフォルト時間割に戻す";
+"settings.nav_title" = "時間割";
+
+/* WatchOS */
+"watch_subheadline_subject" = "現在:";
+"watch_subheadline_time_remaining" = "残り時間:";
+
+/* WatchOS (Widget/Complication) */
+"widget_recommend_time_and_subject" = "時間と科目";
+"widget_recommend_gauge" = "メータ";
+
+"widget_r_subheadline_subject" = "現在:";
+"widget_r_subheadline_time_remaining" = "残り時間:";
+
+"widget_sample_subject" = "サンプル授業";
+"widget_minutes_shorthand" = "分";
+
+"widget_kind" = "PittariTimerWidget";
+"widget_config_display_name" = "ピッタリタイマー";
+"widget_config_description" = "現在の時限と次の休憩までの時間を表示";
+
+/* Kit */
+"default_schedule_period_1" = "1時限";
+"default_schedule_period_2" = "2時限";
+"default_schedule_period_3" = "3時限";
+"default_schedule_period_4" = "4時限";
+"default_schedule_period_5" = "5時限";
+"default_schedule_period_6" = "6時限";
+"default_schedule_period_7" = "7時限";
+"default_schedule_period_8" = "8時限";
+"default_schedule_period_9" = "9時限";
+"default_schedule_period_10" = "10時限";
+
+"time.format.with_seconds" = "%02d分%02d秒";
+"time.format.minutes_only" = "%d分";
+"time.format.minutes_short" = "%d";
