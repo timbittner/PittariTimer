@@ -7,6 +7,10 @@
 import Foundation
 import Combine
 import WatchConnectivity
+import WidgetKit
+
+private let appGroupId = "group.systems.bittner.PittariTimer"
+private let sharedDefaults = UserDefaults(suiteName: "group.systems.bittner.PittariTimer")
 
 public class PittariTimerManager: NSObject, ObservableObject {
   @Published public var currentPeriod: SchoolPeriod?
@@ -64,6 +68,9 @@ public class PittariTimerManager: NSObject, ObservableObject {
   private func saveSchedule() {
     if let encoded = try? JSONEncoder().encode(schedule) {
       UserDefaults.standard.set(encoded, forKey: scheduleKey)
+      sharedDefaults?.set(encoded, forKey: scheduleKey)
+      WidgetCenter.shared.reloadAllTimelines()
+
 #if os(iOS)
       sendScheduleToWatch()
 #endif
