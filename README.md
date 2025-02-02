@@ -46,3 +46,5 @@ MIT License - see LICENSE file for details
 
 ## Acknowledgments
 Built with ♥️ as a one day project that feature crept its way into a weekend project.
+
+<img width="400" alt="PittariTimer" src="https://github.com/user-attachments/assets/9ae83575-6188-44d1-8896-5ade30f85cdb" />
