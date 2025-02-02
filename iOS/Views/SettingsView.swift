@@ -32,7 +32,7 @@ struct SettingsView: View {
             }
             Button(action: { manager.loadDefaultSchedule() }) {
                      Text("Reset to Default Schedule")
-                       .foregroundColor(.red)
+                       .foregroundColor(Color(uiColor: .systemRed))
                        .padding()
                        .frame(maxWidth: .infinity)
                    }

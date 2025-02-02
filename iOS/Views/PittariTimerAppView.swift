@@ -31,7 +31,7 @@ struct PittariTimerAppView: View {
           Text(manager.currentPeriod?.subject ??
             (manager.nextPeriod != nil ? "Pause" : "Feierabend"))
             .font(.system(size: 42, weight: .regular, design: .rounded))
-            .foregroundColor(.blue)
+            .foregroundColor(Color.accentColor)
             .minimumScaleFactor(0.5)
             .lineLimit(1)
         }
@@ -40,7 +40,7 @@ struct PittariTimerAppView: View {
       .frame(maxWidth: .infinity)
       .padding(.vertical, 8)
       .padding(.horizontal, 12)
-      .background(Color.white)
+      .background(Color(uiColor: .systemBackground))
       .clipShape(RoundedRectangle(cornerRadius: 6))
       
       VStack {
@@ -50,12 +50,12 @@ struct PittariTimerAppView: View {
         
         Text(formatTimeInterval(manager.timeToNextBreak))
           .font(.system(size: 48, weight: .regular))
-          .foregroundColor(.red)
+          .foregroundColor(Color(uiColor: .systemRed))
       }
       .frame(maxWidth: .infinity)
       .padding(.vertical, 8)
       .padding(.horizontal, 12)
-      .background(Color.white)
+      .background(Color(uiColor: .systemBackground))
       .clipShape(RoundedRectangle(cornerRadius: 6))
     }
     .padding(8)
