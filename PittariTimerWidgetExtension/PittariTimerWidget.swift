@@ -8,6 +8,7 @@
 import WidgetKit
 import SwiftUI
 import PittariTimerKit
+import AppIntents
 
 
 struct Provider: AppIntentTimelineProvider {
@@ -22,7 +23,7 @@ struct Provider: AppIntentTimelineProvider {
     if let data = sharedDefaults?.data(forKey: scheduleKey) {
       if let savedSchedule = try? JSONDecoder().decode([SchoolPeriod].self, from: data) {
         return savedSchedule
-      } 
+      }
     }
     return []
   }
@@ -59,7 +60,8 @@ struct Provider: AppIntentTimelineProvider {
     return PittariTimerEntry(
       date: Date(),
       period: samplePeriod,
-      timeToNextBreak: 1800 // 30 minutes
+      timeToNextBreak: 1800, // 30 minutes
+      configuration: ConfigurationAppIntent()
     )
   }
   
@@ -71,7 +73,8 @@ struct Provider: AppIntentTimelineProvider {
     return Entry(
       date: currentDate,
       period: currentPeriod,
-      timeToNextBreak: timeToNext
+      timeToNextBreak: timeToNext,
+      configuration: configuration
     )
   }
   
@@ -88,7 +91,8 @@ struct Provider: AppIntentTimelineProvider {
       let entry = Entry(
         date: entryDate,
         period: currentPeriod,
-        timeToNextBreak: timeToNext
+        timeToNextBreak: timeToNext,
+        configuration: configuration
       )
       entries.append(entry)
     }
@@ -97,20 +101,20 @@ struct Provider: AppIntentTimelineProvider {
   }
   
   func recommendations() -> [AppIntentRecommendation<ConfigurationAppIntent>] {
-    [
-        AppIntentRecommendation(
-          intent: ConfigurationAppIntent(),
-          description: "Time and Subject"
-        ),
-        AppIntentRecommendation(
-          intent: {
-            var intent = ConfigurationAppIntent()
-            intent.cornerStyle = .gauge
-            return intent
-          }(),
-          description: "Progress Gauge"
-        )
-      ]
+    return [
+      AppIntentRecommendation(
+        intent: ConfigurationAppIntent(),
+        description: "Time and Subject"
+      ),
+      AppIntentRecommendation(
+        intent: {
+          let intent = ConfigurationAppIntent()
+          intent.cornerStyle = .gauge
+          return intent
+        }(),
+        description: "Progress Gauge"
+      )
+    ]
   }
 }
 
@@ -118,16 +122,17 @@ struct PittariTimerEntry: TimelineEntry {
   let date: Date
   let period: SchoolPeriod?
   let timeToNextBreak: TimeInterval
+  let configuration: ConfigurationAppIntent
 }
 
 struct PittariTimerWidgetView: View {
   var entry: Provider.Entry
+  let configuration: ConfigurationAppIntent
   @Environment(\.widgetFamily) var family
   @Environment(\.widgetRenderingMode) var renderingMode
   
   private var cornerStyle: CornerStyle {
-    // TODO: Get configuration choice
-    .stacked  // Default for now
+    configuration.cornerStyle
   }
   
   var body: some View {
@@ -135,16 +140,50 @@ struct PittariTimerWidgetView: View {
     case .accessoryRectangular:
       RectangularComplicationView(entry: entry)
     case .accessoryCorner:
-      if renderingMode == .fullColor {
-        CornerComplicationView(entry: entry, style: cornerStyle)
-      } else {
-        CornerComplicationView(entry: entry, style: .stacked)
+      // TODO: i would really like to have the outer label arc but this already took too long
+      switch configuration.cornerStyle {
+      case .stacked: // Time remaining on outer arc, subject on inner arc
+        Text(formatTimeInterval(entry.timeToNextBreak) + "'")
+          .font(.system(size: 22, weight: .medium, design: .rounded))
+          .monospacedDigit()
+          .widgetLabel {
+            Text(entry.period?.subject ?? "Pause")
+          }
+        
+      case .gauge: // 3-letter subject code on outer arc, time with progress gauge on inner
+        var progress: Double {
+          guard let period = entry.period else { return 0 }
+          let total = period.endTime.timeIntervalSince(period.startTime)
+          let elapsed = Date().timeIntervalSince(period.startTime)
+          return elapsed / total
+        }
+
+        Text(entry.period?.subject.uppercased().prefix(3) ?? "⏸️")
+          .font(.system(size: 22, weight: .medium, design: .rounded))
+          .monospacedDigit()
+          .widgetLabel {
+            Gauge(value: progress,
+                  in: 0...1) {
+              Text("min") // descriptor, minutes remaining
+            } currentValueLabel: {
+              Text("\(progress * 100, format: .percent)") // descriptor, the amount of progress made
+            } minimumValueLabel: {
+              Text(formatTimeInterval(entry.timeToNextBreak) + "min") // rendered left to the progress bar
+            } maximumValueLabel: {
+              Text("") // rendered right to the progress bar
+            }
+          }
       }
     case .accessoryCircular, .accessoryInline:
       Text("Not supported")
     @unknown default:
       Text("Not supported")
     }
+  }
+  
+  private func formatTimeInterval(_ interval: TimeInterval) -> any StringProtocol {
+    let minutes = Int(interval) / 60
+    return String(format: "%02d", minutes)
   }
 }
 
@@ -154,7 +193,7 @@ struct PittariTimerWidget: Widget {
   
   var body: some WidgetConfiguration {
     AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
-      PittariTimerWidgetView(entry: entry)
+      PittariTimerWidgetView(entry: entry, configuration: entry.configuration)
     }
     .configurationDisplayName("PittariTimer")
     .description("Shows current period and time to next break")
