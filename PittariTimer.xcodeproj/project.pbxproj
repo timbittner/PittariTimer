@@ -17,6 +17,8 @@
 		222605D82D4EAD63001A7EDD /* PittariTimerWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 222605C92D4EAD62001A7EDD /* PittariTimerWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		222605E22D4EAF64001A7EDD /* PittariTimerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2226059B2D4E41C4001A7EDD /* PittariTimerKit.framework */; };
 		222605E32D4EAF64001A7EDD /* PittariTimerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2226059B2D4E41C4001A7EDD /* PittariTimerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		222A78012D500A5D0065E15E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 222A78002D500A540065E15E /* README.md */; };
+		222A78032D500C5C0065E15E /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 222A78022D500C5C0065E15E /* LICENSE */; };
 		22B439982D4E232B00FADC67 /* PittariTimer Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 22B439972D4E232B00FADC67 /* PittariTimer Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -131,6 +133,8 @@
 		222605CA2D4EAD62001A7EDD /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		222605CC2D4EAD62001A7EDD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		222605E72D4EBC0A001A7EDD /* PittariTimerWidgetExtensionExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PittariTimerWidgetExtensionExtension.entitlements; sourceTree = "<group>"; };
+		222A78002D500A540065E15E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		222A78022D500C5C0065E15E /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		22B439872D4E232900FADC67 /* PittariTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PittariTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22B439972D4E232B00FADC67 /* PittariTimer Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PittariTimer Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -240,6 +244,8 @@
 				222605CE2D4EAD62001A7EDD /* PittariTimerWidgetExtension */,
 				222605AC2D4E43B7001A7EDD /* Frameworks */,
 				22B439882D4E232900FADC67 /* Products */,
+				222A78002D500A540065E15E /* README.md */,
+				222A78022D500C5C0065E15E /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -433,6 +439,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				222A78012D500A5D0065E15E /* README.md in Resources */,
+				222A78032D500C5C0065E15E /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
