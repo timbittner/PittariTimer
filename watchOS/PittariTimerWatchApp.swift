@@ -13,17 +13,6 @@ import PittariTimerKit
 struct PittariTimerWatchApp: App {
   
   @StateObject private var manager = PittariTimerManager()
-
-  init() {
-    setupWatchConnectivity()
-  }
-  
-  private func setupWatchConnectivity() {
-    if WCSession.isSupported() {
-      let session = WCSession.default
-      session.activate()
-    }
-  }
   
   var body: some Scene {
     WindowGroup {

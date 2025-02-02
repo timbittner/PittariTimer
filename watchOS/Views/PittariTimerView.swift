@@ -55,7 +55,3 @@ struct PittariTimerView: View {
     return String(format: "%02dm %02ds", minutes, seconds)
   }
 }
-
-#Preview {
-  PittariTimerView()
-}

@@ -9,9 +9,11 @@ import WidgetKit
 import SwiftUI
 import PittariTimerKit
 
-struct Provider: TimelineProvider {
+
+struct Provider: AppIntentTimelineProvider {
   
   typealias Entry = PittariTimerEntry
+  typealias Intent = ConfigurationAppIntent
   
   private let sharedDefaults = UserDefaults(suiteName: "group.systems.bittner.PittariTimer")
   private let scheduleKey = "savedSchedule"
@@ -46,9 +48,36 @@ struct Provider: TimelineProvider {
     return 0
   }
   
-  func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+  func placeholder(in context: Context) -> PittariTimerEntry {
+    // Create a sample entry for previews/placeholders
+    let samplePeriod = SchoolPeriod(
+      number: 1,
+      startTime: Date(),
+      endTime: Date().addingTimeInterval(3600),
+      subject: "Sample Class"
+    )
+    return PittariTimerEntry(
+      date: Date(),
+      period: samplePeriod,
+      timeToNextBreak: 1800 // 30 minutes
+    )
+  }
+  
+  func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> Entry {
     let currentDate = Date()
-    var entries: [PittariTimerEntry] = []
+    let currentPeriod = getCurrentPeriod(at: currentDate)
+    let timeToNext = getTimeToNextBreak(at: currentDate, currentPeriod: currentPeriod)
+    
+    return Entry(
+      date: currentDate,
+      period: currentPeriod,
+      timeToNextBreak: timeToNext
+    )
+  }
+  
+  func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<Entry> {
+    let currentDate = Date()
+    var entries: [Entry] = []
     
     // Create entries for the next hour, updating every minute
     for minuteOffset in 0..<60 {
@@ -56,7 +85,7 @@ struct Provider: TimelineProvider {
       let currentPeriod = getCurrentPeriod(at: entryDate)
       let timeToNext = getTimeToNextBreak(at: entryDate, currentPeriod: currentPeriod)
       
-      let entry = PittariTimerEntry(
+      let entry = Entry(
         date: entryDate,
         period: currentPeriod,
         timeToNextBreak: timeToNext
@@ -64,36 +93,24 @@ struct Provider: TimelineProvider {
       entries.append(entry)
     }
     
-    let timeline = Timeline(entries: entries, policy: .atEnd)
-    completion(timeline)
+    return Timeline(entries: entries, policy: .atEnd)
   }
   
-  func getSnapshot(in context: Context, completion: @escaping (PittariTimerEntry) -> ()) {
-    let currentDate = Date()
-    let currentPeriod = getCurrentPeriod(at: currentDate)
-    let timeToNext = getTimeToNextBreak(at: currentDate, currentPeriod: currentPeriod)
-    
-    let entry = PittariTimerEntry(
-      date: currentDate,
-      period: currentPeriod,
-      timeToNextBreak: timeToNext
-    )
-    completion(entry)
-  }
-  
-  func placeholder(in context: Context) -> PittariTimerEntry {
-    // Create a sample entry for previews/placeholders
-     let samplePeriod = SchoolPeriod(
-       number: 1,
-       startTime: Date(),
-       endTime: Date().addingTimeInterval(3600),
-       subject: "Sample Class"
-     )
-     return PittariTimerEntry(
-       date: Date(),
-       period: samplePeriod,
-       timeToNextBreak: 1800 // 30 minutes
-     )
+  func recommendations() -> [AppIntentRecommendation<ConfigurationAppIntent>] {
+    [
+        AppIntentRecommendation(
+          intent: ConfigurationAppIntent(),
+          description: "Time and Subject"
+        ),
+        AppIntentRecommendation(
+          intent: {
+            var intent = ConfigurationAppIntent()
+            intent.cornerStyle = .gauge
+            return intent
+          }(),
+          description: "Progress Gauge"
+        )
+      ]
   }
 }
 
@@ -103,18 +120,41 @@ struct PittariTimerEntry: TimelineEntry {
   let timeToNextBreak: TimeInterval
 }
 
+struct PittariTimerWidgetView: View {
+  var entry: Provider.Entry
+  @Environment(\.widgetFamily) var family
+  @Environment(\.widgetRenderingMode) var renderingMode
+  
+  private var cornerStyle: CornerStyle {
+    // TODO: Get configuration choice
+    .stacked  // Default for now
+  }
+  
+  var body: some View {
+    switch family {
+    case .accessoryRectangular:
+      RectangularComplicationView(entry: entry)
+    case .accessoryCorner:
+      if renderingMode == .fullColor {
+        CornerComplicationView(entry: entry, style: cornerStyle)
+      } else {
+        CornerComplicationView(entry: entry, style: .stacked)
+      }
+    case .accessoryCircular, .accessoryInline:
+      Text("Not supported")
+    @unknown default:
+      Text("Not supported")
+    }
+  }
+}
+
 @main
 struct PittariTimerWidget: Widget {
   let kind: String = "PittariTimerWidget"
   
   var body: some WidgetConfiguration {
-    StaticConfiguration(kind: kind, provider: Provider()) { entry in
-      if #available(watchOS 10.0, *) {
-        PittariTimerWidgetView(entry: entry)
-          .containerBackground(.fill.tertiary, for: .widget)
-      } else {
-        PittariTimerWidgetView(entry: entry)
-      }
+    AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+      PittariTimerWidgetView(entry: entry)
     }
     .configurationDisplayName("PittariTimer")
     .description("Shows current period and time to next break")
@@ -122,32 +162,3 @@ struct PittariTimerWidget: Widget {
   }
 }
 
-struct PittariTimerWidgetView: View {
-  var entry: Provider.Entry
-  
-  var body: some View {
-    VStack {
-      switch entry.period {
-      case .some(let period):
-        VStack(alignment: .leading) {
-          Text(period.subject)
-            .font(.headline)
-            .lineLimit(1)
-          Text(formatTimeInterval(entry.timeToNextBreak))
-            .font(.system(.body, design: .rounded))
-            .foregroundStyle(.red)
-        }
-      case .none:
-        Text(formatTimeInterval(entry.timeToNextBreak))
-          .font(.system(.headline, design: .rounded))
-          .foregroundStyle(.red)
-      }
-    }
-  }
-  
-  private func formatTimeInterval(_ interval: TimeInterval) -> String {
-    let minutes = Int(interval) / 60
-    let seconds = Int(interval) % 60
-    return String(format: "%02d:%02d", minutes, seconds)
-  }
-}
