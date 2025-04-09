@@ -27,11 +27,20 @@ public class PittariTimerManager: NSObject, ObservableObject {
   
   
   public override init() {
-    if let data = UserDefaults.standard.data(forKey: scheduleKey),
+    // First try to load from shared app group UserDefaults
+    if let data = sharedDefaults?.data(forKey: scheduleKey),
        let savedSchedule = try? JSONDecoder().decode([SchoolPeriod].self, from: data) {
       self.schedule = savedSchedule
-    } else {
+    }
+    // Fall back to local UserDefaults
+    else if let data = UserDefaults.standard.data(forKey: scheduleKey),
+            let savedSchedule = try? JSONDecoder().decode([SchoolPeriod].self, from: data) {
+      self.schedule = savedSchedule
+    }
+    // Use default schedule as last resort
+    else {
       self.schedule = defaultSchedule
+      print("INFO: PittariTimer loaded default schedule - no saved schedule found")
     }
     
     super.init()
