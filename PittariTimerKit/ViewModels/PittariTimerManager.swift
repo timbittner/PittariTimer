@@ -59,9 +59,9 @@ public class PittariTimerManager: NSObject, ObservableObject {
     }
     
     if let period = currentPeriod {
-      timeToNextBreak = period.endTime.timeIntervalSince(now)
+      timeToNextBreak = ceil(period.endTime.timeIntervalSince(now))
     } else if let next = nextPeriod {
-      timeToNextBreak = next.startTime.timeIntervalSince(now)
+      timeToNextBreak = ceil(next.startTime.timeIntervalSince(now))
     }
   }
   
